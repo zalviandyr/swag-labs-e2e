@@ -46,7 +46,39 @@ test.describe("Inventory List", () => {
   });
 });
 
-test.describe("Inventory Detail", () => {});
+test.describe("Inventory Detail", () => {
+  const indicesToTest = [0, 2, 5];
+
+  test.beforeEach(async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+
+    const user = users.standard;
+    await loginPage.login(user);
+  });
+
+  for (const index of indicesToTest) {
+    test(`item at index ${index} matches detail`, async ({ page }) => {
+      const inventoryPage = new InventoryPage(page);
+      await inventoryPage.goto();
+
+      const name = await inventoryPage.getItemNameByIndex(index).textContent();
+      const desc = await inventoryPage.getItemDescByIndex(index).textContent();
+      const price = await inventoryPage.getItemPriceByIndex(index).textContent();
+
+      const link = inventoryPage.getItemLinkByIndex(index);
+      await link.click();
+
+      const detailName = await inventoryPage.itemName.textContent();
+      const detailDesc = await inventoryPage.itemDesc.textContent();
+      const detailPrice = await inventoryPage.itemPrice.textContent();
+
+      expect(name || "").toBe(detailName || "");
+      expect(desc || "").toBe(detailDesc || "");
+      expect(price || "").toBe(detailPrice || "");
+    });
+  }
+});
 
 test.describe("Sort Inventory", () => {
   test.beforeEach(async ({ page }) => {
