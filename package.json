@@ -10,6 +10,6 @@
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:codegen": "playwright test --codegen"
+    "test:codegen": "playwright codegen"
   }
 }
