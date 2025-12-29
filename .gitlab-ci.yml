@@ -17,6 +17,7 @@ e2e:playwright:
   tags:
     - regression
   script:
+    - yarn config set registry "https://registry.internal.company"
     - yarn install --frozen-lockfile
     - npx playwright install --with-deps
     - yarn test
