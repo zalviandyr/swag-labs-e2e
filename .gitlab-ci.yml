@@ -4,12 +4,12 @@ stages:
 image: mcr.microsoft.com/playwright:v1.57.0-jammy
 
 variables:
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  YARN_CACHE_FOLDER: "$CI_PROJECT_DIR/.yarn-cache"
 
 cache:
   key: "${CI_COMMIT_REF_SLUG}"
   paths:
-    - .npm/
+    - .yarn-cache/
     - node_modules/
 
 e2e:playwright:
@@ -17,6 +17,6 @@ e2e:playwright:
   tags:
     - regression
   script:
-    - npm ci
+    - yarn install --frozen-lockfile
     - npx playwright install --with-deps
-    - npm test
+    - yarn test
