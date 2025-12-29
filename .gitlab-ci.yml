@@ -15,7 +15,7 @@ cache:
 e2e:playwright:
   stage: test
   tags:
-    - shared
+    - fargate-runners
   script:
     - yarn config set registry "https://registry.internal.company"
     - yarn install --frozen-lockfile
