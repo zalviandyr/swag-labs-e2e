@@ -1,5 +1,9 @@
 export const baseUrl = "https://www.saucedemo.com";
 export const inventoryUrl = baseUrl + "/inventory.html";
+export const cartUrl = baseUrl + "/cart.html";
+export const stepOneUrl = baseUrl + "/checkout-step-one.html";
+export const stepTwoUrl = baseUrl + "/checkout-step-two.html";
+export const completeCheckoutUrl = baseUrl + "/checkout-complete.html";
 
 const userPassword = "secret_sauce";
 export const users = {
