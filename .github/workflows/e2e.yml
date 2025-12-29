@@ -40,10 +40,10 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run tests
-        run: npx playwright test --reporter=json > /tmp/report.json
+        run: npx playwright test --reporter=json > report.json
 
       - name: Prepare payload
-        run: node scripts/parse-report.mjs /tmp/report.json /tmp/parsed-report.json
+        run: node scripts/parse-report.mjs report.json parsed-report.json
 
       - name: Send Notification to Google Chat
         if: always()
@@ -53,9 +53,9 @@ jobs:
         run: |
           sed \
             -e "s|__PIPELINE_URL__|$PIPELINE_URL|g" \
-            /tmp/parsed-report.json > /tmp/parsed-report.json
+            parsed-report.json > parsed-report.json
 
           curl -sS -X POST \
             -H "Content-Type: application/json; charset=UTF-8" \
-            --data-binary @/tmp/parsed-report.json \
+            --data-binary @parsed-report.json \
             "$GCHAT_WEBHOOK_URL"
