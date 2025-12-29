@@ -8,8 +8,8 @@
     "@types/node": "^25.0.3"
   },
   "scripts": {
+    "codegen": "playwright codegen",
     "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:codegen": "playwright codegen"
+    "test:ui": "playwright test --ui"
   }
 }
