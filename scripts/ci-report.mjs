@@ -1,4 +1,6 @@
-import { readFileSync, writeFileSync } from "fs";
+import axios from "axios";
+import { readFileSync } from "fs";
+import moment from "moment";
 
 function msToMinSec(ms) {
   const totalSeconds = Math.floor(ms / 1000);
@@ -8,8 +10,9 @@ function msToMinSec(ms) {
   return `${minutes}m ${seconds}s`;
 }
 
+const pipelineUrl = process.env["PIPELINE_URL"] || "";
+const webhookUrl = process.env["GCHAT_WEBHOOK_URL"] || "";
 const inputFile = process.argv[2];
-const outputFile = process.argv[3];
 const report = readFileSync(inputFile, "utf8");
 const reportJson = JSON.parse(report);
 
@@ -24,6 +27,7 @@ const total = expected + skipped + unexpected + flaky;
 
 const workers = reportJson["config"]["metadata"]["actualWorkers"];
 const formattedDuration = msToMinSec(duration);
+const formattedStartTime = moment(startTime).format("MMMM Do YYYY, h:mm:ss a");
 
 const card = {
   cardsV2: [
@@ -32,7 +36,7 @@ const card = {
       card: {
         header: {
           title: "Playwright E2E",
-          subtitle: `<b>Total</b>: ${total} tests • <b>Workers</b>: ${workers} • <b>Duration</b>: ${formattedDuration} • <b>Started at</b>: ${startTime}`,
+          subtitle: `<b>Total</b>: ${total} tests • <b>Workers</b>: ${workers} • <b>Duration</b>: ${formattedDuration} • <b>Started at</b>: ${formattedStartTime}`,
         },
         sections: [
           {
@@ -66,7 +70,7 @@ const card = {
                   buttons: [
                     {
                       text: "Open Pipeline",
-                      onClick: { openLink: { url: "__PIPELINE_URL__" } },
+                      onClick: { openLink: { url: pipelineUrl } },
                     },
                   ],
                 },
@@ -79,4 +83,5 @@ const card = {
   ],
 };
 
-writeFileSync(outputFile, JSON.stringify(card));
+// send payload to Google Chat
+axios.post(webhookUrl, card);

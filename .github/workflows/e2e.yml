@@ -42,20 +42,8 @@ jobs:
       - name: Run tests
         run: npx playwright test --reporter=json > report.json
 
-      - name: Prepare payload
-        run: node scripts/parse-report.mjs report.json parsed-report.json
-
-      - name: Send Notification to Google Chat
-        if: always()
+      - name: Prepare payload and Send to Google Chat
         env:
           GCHAT_WEBHOOK_URL: ${{ secrets.GCHAT_WEBHOOK_URL }}
           PIPELINE_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          sed \
-            -e "s|__PIPELINE_URL__|$PIPELINE_URL|g" \
-            parsed-report.json > parsed-report.json
-
-          curl -sS -X POST \
-            -H "Content-Type: application/json; charset=UTF-8" \
-            --data-binary @parsed-report.json \
-            "$GCHAT_WEBHOOK_URL"
+        run: node scripts/parse-report.mjs report.json parsed-report.json
