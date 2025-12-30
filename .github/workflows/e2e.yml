@@ -46,4 +46,4 @@ jobs:
         env:
           GCHAT_WEBHOOK_URL: ${{ secrets.GCHAT_WEBHOOK_URL }}
           PIPELINE_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: node scripts/parse-report.mjs report.json parsed-report.json
+        run: node scripts/ci-report.mjs report.json
