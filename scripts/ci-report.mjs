@@ -1,6 +1,6 @@
 import axios from "axios";
 import { readFileSync } from "fs";
-import moment from "moment";
+import moment from "moment-timezone";
 
 function msToMinSec(ms) {
   const totalSeconds = Math.floor(ms / 1000);
@@ -27,7 +27,7 @@ const total = expected + skipped + unexpected + flaky;
 
 const workers = reportJson["config"]["metadata"]["actualWorkers"];
 const formattedDuration = msToMinSec(duration);
-const formattedStartTime = moment(startTime).format("MMMM Do YYYY, h:mm:ss a");
+const formattedStartTime = moment(startTime).tz("Asia/Jakarta").format("MMMM Do YYYY, h:mm:ss a");
 
 const card = {
   cardsV2: [
