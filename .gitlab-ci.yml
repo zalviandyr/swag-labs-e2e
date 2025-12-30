@@ -1,0 +1,25 @@
+stages:
+  - test
+
+e2e_playwright:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.57.0-jammy
+  variables:
+    HOME: "/root"
+    PLAYWRIGHT_BROWSERS_PATH: "/ms-playwright"
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/cache/
+      - /root/.cache/yarn/
+    policy: pull-push
+
+  script:
+    - yarn install --frozen-lockfile
+    - npx playwright install --with-deps
+    - npx playwright test --reporter=json > report.json
+    - export PIPELINE_URL="$CI_PIPELINE_URL"
+    - node scripts/ci-report.mjs report.json
